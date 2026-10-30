@@ -1,346 +1,131 @@
-# AeroEdge - Smart Employee & Attendance Management System
+# AeroEdge HR
 
-A comprehensive, modern HR and attendance management platform built with React Native, Expo, and Supabase.
+An open-source HR and attendance app for small teams, built with **Expo (React Native)**, **Expo Router** and **Supabase**. Runs on Android, iOS and the web from one codebase.
 
-![Version](https://img.shields.io/badge/version-1.0.0-blue)
-![License](https://img.shields.io/badge/license-Proprietary-green)
-![Platform](https://img.shields.io/badge/platform-iOS%20%7C%20Android%20%7C%20Web-blue)
+![License: MIT](https://img.shields.io/badge/license-MIT-green)
+![Status: early prototype](https://img.shields.io/badge/status-early%20prototype-orange)
+![Expo SDK 54](https://img.shields.io/badge/Expo%20SDK-54-blue)
+![Platforms](https://img.shields.io/badge/platform-Android%20%7C%20iOS%20%7C%20Web-blue)
 
-## 🎯 Overview
+> **Status: early prototype.** Sign-in and the app's screens and navigation are in place; most screens still show static UI and are not yet connected to the database. See [What works today](#what-works-today) and the [Roadmap](#roadmap). Contributions are welcome.
 
-AeroEdge reimagines HR workflows with a clean, intuitive interface and powerful features. Inspired by industry leaders like Zoho People, it provides a unified solution for:
+## Why
 
-- **Employee Management** - Complete employee database with organizational hierarchy
-- **Attendance Tracking** - Real-time check-in/out with multiple work modes
-- **Leave Management** - Streamlined leave requests with approval workflows
-- **Time Tracking** - Project-based time logging and timesheet generation
-- **Reports & Analytics** - Comprehensive dashboards and insights
-- **Role-Based Access** - Granular permissions for Admin, HR, Manager, Employee roles
+Small businesses in India often track attendance and leave in registers or spreadsheets because HR software is priced for big companies. AeroEdge aims to be a free, self-hostable alternative: your own Supabase project, your own data.
 
-## ✨ Key Features
+## What works today
 
-### 1. Intuitive Dashboard
-- Personalized welcome screen with user greetings
-- Quick access to pending tasks and approvals
-- Real-time status indicators
-- Manager-specific team metrics
-- Visual attendance and leave summaries
+| Area | Status |
+|---|---|
+| Email/password sign-in and sign-up (Supabase Auth) | ✅ Working |
+| Session persistence and auto refresh | ✅ Working |
+| Loads the signed-in user's profile (`profiles` table) | ✅ Working |
+| Tab navigation: Dashboard, Employees, Attendance, Leave, Reports, Profile | ✅ Working |
+| Profile screen | ✅ UI with profile data |
+| Attendance screen: live clock, Office In / Remote In buttons | 🟡 UI only (buttons don't save yet) |
+| Dashboard, Employees, Leave, Reports | 🟡 UI only (placeholder content) |
 
-### 2. Employee Management
-- Browse organizational directory
-- Search and filter employees
-- View complete employee profiles
-- Department and designation hierarchy
-- Employment type and work mode tracking
+## Roadmap
 
-### 3. Attendance System
-- Daily check-in/check-out functionality
-- Dual work mode support (Office/Remote)
-- Real-time clock display
-- Work hours calculation
-- Monthly attendance summaries
-- Attendance patterns and analytics
+- [ ] Create the `profiles` row (first/last name) on sign-up
+- [ ] Save check-in / check-out to an `attendance_records` table
+- [ ] Employee directory from the database, with search
+- [ ] Leave requests with manager approval
+- [ ] Monthly attendance and leave reports (CSV export)
+- [ ] Role-based access (admin, HR, manager, employee) with Supabase Row Level Security
+- [ ] Push notifications for approvals
 
-### 4. Leave Management
-- Leave balance tracking by type
-- Streamlined leave request process
-- Approval workflows
-- Loss of Pay (LOP) calculations
-- Leave history and trends
-- Carry-forward and quota management
+## Tech stack
 
-### 5. Time Tracking
-- Project-based time logging
-- Billable hours tracking
-- Daily work log entries
-- Timesheet reports
-- Client and project analytics
+- **App:** Expo SDK 54, React Native 0.81, Expo Router (file-based routing), TypeScript
+- **Backend:** Supabase (Postgres + Auth)
+- **UI:** React Native StyleSheet, Lucide icons
 
-### 6. Reports & Analytics
-- **Employee Reports**: Headcount, diversity, attrition trends
-- **Attendance Reports**: Daily status, remote vs office analytics
-- **Leave Reports**: Balance summaries, availability forecasts
-- **Time Reports**: Logged hours, project profitability
-- **Team Analytics**: Department metrics, resource utilization
-- **Organization Reports**: Company-wide insights
+## Getting started
 
-### 7. Workflow Automation
-- Automatic leave approvals
-- Notification triggers
-- Workflow customization by role
-- Batch operations support
-
-## 🏗️ Architecture
-
-### Frontend
-- **Framework**: React Native with Expo
-- **Navigation**: Expo Router (file-based routing)
-- **State Management**: React Context API
-- **UI Components**: Lucide React Native icons
-- **Styling**: React Native StyleSheet
-
-### Backend
-- **Database**: PostgreSQL via Supabase
-- **Authentication**: Supabase Auth (Email/Password)
-- **Real-time**: Supabase Real-time subscriptions
-- **Security**: Row Level Security (RLS) policies
-
-### Deployment
-- **Platform Support**: iOS, Android, Web
-- **Hosting**: Expo EAS, Vercel, or custom servers
-- **Build**: Expo build system
-
-## 📱 Platform Support
-
-| Feature | iOS | Android | Web |
-|---------|-----|---------|-----|
-| Core Features | ✅ | ✅ | ✅ |
-| Camera Access | ✅ | ✅ | ⚠️ |
-| Biometric Auth | ✅ | ✅ | ❌ |
-| Geo-fencing | ✅ | ✅ | ⚠️ |
-| Push Notifications | ✅ | ✅ | ✅ |
-| Offline Mode | ✅ | ✅ | ✅ |
-
-## 🚀 Getting Started
-
-### Prerequisites
-- Node.js 16+ and npm/yarn
-- Expo CLI (`npm install -g expo-cli`)
-- Supabase account (free tier available)
-- iOS simulator or Android emulator (optional)
-
-### Installation
+**Requirements:** Node.js 20+, a free [Supabase](https://supabase.com) project, and Expo Go on your phone (or an Android/iOS emulator).
 
 ```bash
-# Clone the repository
-git clone https://github.com/yourusername/aeroedge.git
-cd aeroedge
-
-# Install dependencies
+git clone https://github.com/kaviyarasu-codes/aeroedge_hr_app.git
+cd aeroedge_hr_app
 npm install
-
-# Set up environment variables
-# Copy .env.example to .env and fill in your Supabase credentials
-cp .env.example .env
-
-# Start development server
-npm run dev
+cp .env.example .env    # then fill in your Supabase URL and anon key
+npm run dev             # scan the QR code with Expo Go, or press w for web
 ```
 
-### Environment Variables
+### Environment variables
 
-```env
-EXPO_PUBLIC_SUPABASE_URL=your_supabase_url
-EXPO_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
+| Name | Where to find it |
+|---|---|
+| `EXPO_PUBLIC_SUPABASE_URL` | Supabase → Project Settings → API → Project URL |
+| `EXPO_PUBLIC_SUPABASE_ANON_KEY` | Supabase → Project Settings → API → `anon` public key |
+
+Never put the `service_role` key in the app.
+
+### Database setup
+
+The app currently reads one table, `profiles`. Create it in Supabase → SQL Editor:
+
+```sql
+create table public.profiles (
+  id uuid primary key references auth.users (id) on delete cascade,
+  organization_id uuid,
+  email text not null,
+  first_name text not null default '',
+  last_name text not null default '',
+  phone text,
+  avatar_url text,
+  role text not null default 'employee'
+    check (role in ('admin', 'hr', 'manager', 'employee', 'intern')),
+  is_active boolean not null default true,
+  created_at timestamptz not null default now()
+);
+
+alter table public.profiles enable row level security;
+
+create policy "Users can read their own profile"
+  on public.profiles for select
+  using (auth.uid() = id);
+
+create policy "Users can update their own profile"
+  on public.profiles for update
+  using (auth.uid() = id);
 ```
 
-## 📚 Documentation
+Until sign-up creates the profile automatically (see Roadmap), add a row for your user in the Table Editor with the same `id` as the user in Authentication → Users.
 
-- **[QUICKSTART.md](./QUICKSTART.md)** - Get started in 5 minutes
-- **[SETUP.md](./SETUP.md)** - Detailed setup and configuration guide
-- **[API.md](./API.md)** - API endpoints and data models
-- **[ARCHITECTURE.md](./ARCHITECTURE.md)** - System architecture overview
+## Scripts
 
-## 🗂️ Project Structure
+| Command | What it does |
+|---|---|
+| `npm run dev` | Start the Expo dev server |
+| `npm run build:web` | Export a static web build to `dist/` |
+| `npm run typecheck` | TypeScript check |
+| `npm run lint` | Lint with Expo's ESLint config |
+
+## Project structure
 
 ```
-aeroedge/
-├── app/                              # Expo Router screens
-│   ├── (tabs)/                      # Tab-based navigation
-│   │   ├── index.tsx               # Dashboard
-│   │   ├── employees.tsx           # Employee directory
-│   │   ├── attendance.tsx          # Attendance tracking
-│   │   ├── leave.tsx               # Leave management
-│   │   ├── reports.tsx             # Reports & analytics
-│   │   └── profile.tsx             # User profile
-│   ├── _layout.tsx                 # Root layout
-│   └── index.tsx                   # Auth screen
-├── components/                      # Reusable components
-│   ├── Button.tsx
-│   ├── Input.tsx
-│   └── ...
-├── contexts/                        # Global state
-│   └── AuthContext.tsx             # Authentication
-├── hooks/                          # Custom hooks
-├── lib/                            # Utilities
-│   └── supabase.ts                # Database client
-├── types/                          # TypeScript types
-└── assets/                         # Images, fonts, etc.
+app/
+  index.tsx          Sign-in / sign-up screen
+  _layout.tsx        Root layout (AuthProvider)
+  (tabs)/            Dashboard, Employees, Attendance, Leave, Reports, Profile
+components/          Button, Input
+contexts/            AuthContext (Supabase session + profile)
+lib/supabase.ts      Supabase client
+types/               Database types
 ```
 
-## 👥 User Roles & Permissions
+## Contributing
 
-| Role | Features | Permissions |
-|------|----------|-------------|
-| **Admin** | Everything | Full system access |
-| **HR Manager** | Employees, Leave, Reports | Company-wide visibility |
-| **Manager** | Team, Approvals, Reports | Team-level management |
-| **Employee** | Personal, Leave | Self-service only |
-| **Intern** | Limited | Attendance, basic features |
+Issues and pull requests are welcome, especially for items on the Roadmap.
 
-## 🔒 Security Features
+1. Fork the repo and create a branch: `git checkout -b feature/attendance-save`
+2. Make your change and run `npm run typecheck`
+3. Open a pull request describing what you changed and how you tested it
 
-- ✅ Row Level Security (RLS) on all tables
-- ✅ Email/password authentication with Supabase Auth
-- ✅ Encrypted sessions and tokens
-- ✅ Rate limiting on API endpoints
-- ✅ CORS protection
-- ✅ Input validation and sanitization
-- ✅ Audit logging for sensitive operations
+## Licence
 
-## 🎨 Design System
+[MIT](LICENSE) © 2026 Kaviyarasu Kanthavel
 
-### Color Palette
-```
-Primary:   #2563eb (Blue)
-Success:   #16a34a (Green)
-Warning:   #f59e0b (Amber)
-Error:     #dc2626 (Red)
-Neutral:   #64748b (Slate)
-```
-
-### Typography
-- **Display**: 28px, Weight 700
-- **Title**: 16-20px, Weight 700
-- **Body**: 14-16px, Weight 400-600
-- **Caption**: 12px, Weight 400-600
-
-### Spacing System
-8px base unit (8, 16, 24, 32, 40, 48px)
-
-## 📊 Database Schema
-
-### Core Tables
-- `organizations` - Company information
-- `employees` - Employee records
-- `profiles` - User profiles
-- `departments` - Organizational structure
-- `designations` - Job titles
-- `locations` - Office locations
-
-### Operational Tables
-- `attendance_records` - Check-in/out logs
-- `shifts` - Shift definitions
-- `leave_requests` - Leave applications
-- `leave_balances` - Leave entitlements
-- `time_entries` - Work time logs
-- `projects` - Project definitions
-
-### Workflow Tables
-- `approval_workflows` - Workflow configurations
-- `approval_requests` - Pending approvals
-
-See [SETUP.md](./SETUP.md) for complete schema details.
-
-## 🔄 API Integration
-
-The app uses Supabase REST API for all data operations:
-
-```typescript
-// Example: Fetch employee data
-const { data, error } = await supabase
-  .from('employees')
-  .select('*, profiles(*), departments(*)')
-  .eq('status', 'active')
-  .order('created_at', { ascending: false });
-```
-
-## 🧪 Testing
-
-```bash
-# Type checking
-npm run typecheck
-
-# Linting
-npm run lint
-
-# Format code
-npm run format
-```
-
-## 📦 Build & Deployment
-
-### Web Build
-```bash
-npm run build:web
-```
-
-### Mobile Build
-```bash
-# iOS
-eas build --platform ios
-
-# Android
-eas build --platform android
-```
-
-## 🌟 Roadmap
-
-### Phase 1 (Current)
-- ✅ Core employee management
-- ✅ Attendance tracking
-- ✅ Leave management
-- ✅ Basic reporting
-
-### Phase 2 (Planned)
-- 🔄 Payroll integration
-- 🔄 Performance appraisals
-- 🔄 Advanced analytics
-- 🔄 Mobile app notifications
-
-### Phase 3 (Planned)
-- ⏳ Recruitment module
-- ⏳ Expense tracking
-- ⏳ Chat and collaboration
-- ⏳ AI-powered insights
-
-## 🤝 Contributing
-
-We welcome contributions! Please follow these steps:
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit changes (`git commit -m 'Add amazing feature'`)
-4. Push to branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## 📝 License
-
-This project is proprietary software. All rights reserved.
-
-## 📞 Support
-
-For issues, questions, or suggestions:
-
-- **Email**: support@aeroedge.com
-- **Documentation**: See SETUP.md and QUICKSTART.md
-- **Issue Tracker**: GitHub Issues
-
-## 🙏 Acknowledgments
-
-- Built with [Expo](https://expo.dev)
-- Database by [Supabase](https://supabase.com)
-- Icons from [Lucide](https://lucide.dev)
-- Authentication via [Supabase Auth](https://supabase.com/auth)
-
-## 📈 Performance Metrics
-
-- **Load Time**: < 2 seconds
-- **API Response**: < 500ms (average)
-- **Bundle Size**: ~3.5MB (optimized)
-- **Database Query**: < 100ms (indexed)
-
-## 🔐 Compliance
-
-- ✅ GDPR Ready
-- ✅ Data Privacy
-- ✅ Audit Logging
-- ✅ Role-Based Access Control
-- ✅ Encryption in Transit
-
----
-
-**Made with ❤️ by the AeroEdge Team**
-
-Last Updated: November 2024
-Version: 1.0.0
+Built by **Kaviyarasu K**, full-stack and app developer, Coimbatore · [Portfolio](https://kaviyarasu-portfolio.pages.dev) · [GitHub](https://github.com/kaviyarasu-codes)
