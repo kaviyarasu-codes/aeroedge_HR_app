@@ -21,6 +21,7 @@ export default function AuthScreen() {
   const [lastName, setLastName] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [info, setInfo] = useState('');
 
   const { signIn, signUp, session } = useAuth();
   const router = useRouter();
@@ -33,6 +34,7 @@ export default function AuthScreen() {
 
   const handleAuth = async () => {
     setError('');
+    setInfo('');
     setLoading(true);
 
     try {
@@ -40,11 +42,21 @@ export default function AuthScreen() {
         const { error } = await signIn(email, password);
         if (error) throw error;
       } else {
-        if (!firstName || !lastName) {
+        if (!firstName.trim() || !lastName.trim() || !email.trim() || !password) {
           throw new Error('Please fill in all fields');
         }
-        const { error } = await signUp(email, password, firstName, lastName);
+        const { error, needsConfirmation } = await signUp(
+          email,
+          password,
+          firstName,
+          lastName
+        );
         if (error) throw error;
+        if (needsConfirmation) {
+          setInfo('Account created. Check your email to confirm it, then sign in.');
+          setIsLogin(true);
+          setPassword('');
+        }
       }
     } catch (err: any) {
       setError(err.message || 'An error occurred');
@@ -113,7 +125,8 @@ export default function AuthScreen() {
             autoCapitalize="none"
           />
 
-          {error && <Text style={styles.errorText}>{error}</Text>}
+          {!!error && <Text style={styles.errorText}>{error}</Text>}
+          {!!info && <Text style={styles.infoText}>{info}</Text>}
 
           <Button
             title={isLogin ? 'Sign In' : 'Sign Up'}
@@ -131,6 +144,7 @@ export default function AuthScreen() {
               onPress={() => {
                 setIsLogin(!isLogin);
                 setError('');
+                setInfo('');
               }}
               variant="outline"
             />
@@ -193,6 +207,12 @@ const styles = StyleSheet.create({
   },
   errorText: {
     color: '#ef4444',
+    fontSize: 14,
+    marginBottom: 16,
+    textAlign: 'center',
+  },
+  infoText: {
+    color: '#16a34a',
     fontSize: 14,
     marginBottom: 16,
     textAlign: 'center',

@@ -18,6 +18,7 @@ Small businesses in India often track attendance and leave in registers or sprea
 | Area | Status |
 |---|---|
 | Email/password sign-in and sign-up (Supabase Auth) | ✅ Working |
+| Profile created automatically on sign-up (database trigger) | ✅ Working |
 | Session persistence and auto refresh | ✅ Working |
 | Loads the signed-in user's profile (`profiles` table) | ✅ Working |
 | Tab navigation: Dashboard, Employees, Attendance, Leave, Reports, Profile | ✅ Working |
@@ -27,7 +28,7 @@ Small businesses in India often track attendance and leave in registers or sprea
 
 ## Roadmap
 
-- [ ] Create the `profiles` row (first/last name) on sign-up
+- [x] Create the `profiles` row (first/last name) on sign-up
 - [ ] Save check-in / check-out to an `attendance_records` table
 - [ ] Employee directory from the database, with search
 - [ ] Leave requests with manager approval
@@ -64,35 +65,15 @@ Never put the `service_role` key in the app.
 
 ### Database setup
 
-The app currently reads one table, `profiles`. Create it in Supabase → SQL Editor:
+Open Supabase → **SQL Editor**, paste the contents of [`supabase/migrations/20261030000000_profiles_and_signup_trigger.sql`](supabase/migrations/20261030000000_profiles_and_signup_trigger.sql) and run it (or use the Supabase CLI: `supabase db push`). It:
 
-```sql
-create table public.profiles (
-  id uuid primary key references auth.users (id) on delete cascade,
-  organization_id uuid,
-  email text not null,
-  first_name text not null default '',
-  last_name text not null default '',
-  phone text,
-  avatar_url text,
-  role text not null default 'employee'
-    check (role in ('admin', 'hr', 'manager', 'employee', 'intern')),
-  is_active boolean not null default true,
-  created_at timestamptz not null default now()
-);
+- creates the `profiles` table with Row Level Security (each user can read their own profile and edit their name, phone and photo, but not their role)
+- adds a trigger that creates the profile automatically when someone signs up, using the first and last name from the sign-up form
+- creates profiles for any users who signed up before the trigger existed
 
-alter table public.profiles enable row level security;
+The script is safe to run more than once.
 
-create policy "Users can read their own profile"
-  on public.profiles for select
-  using (auth.uid() = id);
-
-create policy "Users can update their own profile"
-  on public.profiles for update
-  using (auth.uid() = id);
-```
-
-Until sign-up creates the profile automatically (see Roadmap), add a row for your user in the Table Editor with the same `id` as the user in Authentication → Users.
+If **Confirm email** is on (Supabase → Authentication → Sign In / Providers → Email), new users see "Check your email to confirm it" after signing up and can sign in once they've confirmed.
 
 ## Scripts
 
@@ -114,6 +95,7 @@ components/          Button, Input
 contexts/            AuthContext (Supabase session + profile)
 lib/supabase.ts      Supabase client
 types/               Database types
+supabase/migrations/ Database schema (SQL)
 ```
 
 ## Contributing

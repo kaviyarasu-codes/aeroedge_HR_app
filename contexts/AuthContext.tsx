@@ -20,7 +20,12 @@ interface AuthContextType {
   profile: Profile | null;
   loading: boolean;
   signIn: (email: string, password: string) => Promise<{ error: any }>;
-  signUp: (email: string, password: string, firstName: string, lastName: string) => Promise<{ error: any }>;
+  signUp: (
+    email: string,
+    password: string,
+    firstName: string,
+    lastName: string
+  ) => Promise<{ error: any; needsConfirmation: boolean }>;
   signOut: () => Promise<void>;
   refreshProfile: () => Promise<void>;
 }
@@ -87,14 +92,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     firstName: string,
     lastName: string
   ) => {
-    const { data: authData, error: authError } = await supabase.auth.signUp({
-      email,
+    // The names go into the user's metadata; the database trigger in
+    // supabase/migrations creates the matching row in public.profiles.
+    // This works even when email confirmation is on (no session yet).
+    const { data, error } = await supabase.auth.signUp({
+      email: email.trim(),
       password,
+      options: {
+        data: {
+          first_name: firstName.trim(),
+          last_name: lastName.trim(),
+        },
+      },
     });
 
-    if (authError) return { error: authError };
+    if (error) return { error, needsConfirmation: false };
 
-    return { error: null };
+    // No session means Supabase sent a confirmation email first.
+    return { error: null, needsConfirmation: !data.session };
   };
 
   const signOut = async () => {
