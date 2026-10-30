@@ -23,13 +23,15 @@ Small businesses in India often track attendance and leave in registers or sprea
 | Loads the signed-in user's profile (`profiles` table) | ✅ Working |
 | Tab navigation: Dashboard, Employees, Attendance, Leave, Reports, Profile | ✅ Working |
 | Profile screen | ✅ UI with profile data |
-| Attendance screen: live clock, Office In / Remote In buttons | 🟡 UI only (buttons don't save yet) |
+| Attendance: Office In / Remote In check-in, check-out, hours worked today | ✅ Working (times come from the server clock) |
 | Dashboard, Employees, Leave, Reports | 🟡 UI only (placeholder content) |
 
 ## Roadmap
 
 - [x] Create the `profiles` row (first/last name) on sign-up
-- [ ] Save check-in / check-out to an `attendance_records` table
+- [x] Save check-in / check-out to an `attendance_records` table
+- [ ] Show today's attendance status on the Dashboard
+- [ ] Monthly attendance history on the Attendance screen
 - [ ] Employee directory from the database, with search
 - [ ] Leave requests with manager approval
 - [ ] Monthly attendance and leave reports (CSV export)
@@ -65,13 +67,14 @@ Never put the `service_role` key in the app.
 
 ### Database setup
 
-Open Supabase → **SQL Editor**, paste the contents of [`supabase/migrations/20261030000000_profiles_and_signup_trigger.sql`](supabase/migrations/20261030000000_profiles_and_signup_trigger.sql) and run it (or use the Supabase CLI: `supabase db push`). It:
+Open Supabase → **SQL Editor** and run these files from [`supabase/migrations`](supabase/migrations) in order (or use the Supabase CLI: `supabase db push`). Both are safe to run more than once.
 
-- creates the `profiles` table with Row Level Security (each user can read their own profile and edit their name, phone and photo, but not their role)
-- adds a trigger that creates the profile automatically when someone signs up, using the first and last name from the sign-up form
-- creates profiles for any users who signed up before the trigger existed
-
-The script is safe to run more than once.
+1. **`20261030000000_profiles_and_signup_trigger.sql`**
+   - creates the `profiles` table with Row Level Security (each user reads their own profile and can edit name, phone and photo, not their role)
+   - creates the profile automatically on sign-up from the first and last name in the form, and backfills existing users
+2. **`20261030010000_attendance.sql`**
+   - creates `attendance_records` (one record per user per day: mode, check-in and check-out time)
+   - adds `check_in(mode, timezone)` and `check_out(timezone)` functions; times come from the database clock, and users can read but not edit their records directly
 
 If **Confirm email** is on (Supabase → Authentication → Sign In / Providers → Email), new users see "Check your email to confirm it" after signing up and can sign in once they've confirmed.
 
@@ -94,6 +97,7 @@ app/
 components/          Button, Input
 contexts/            AuthContext (Supabase session + profile)
 lib/supabase.ts      Supabase client
+lib/attendance.ts    Check-in / check-out helpers
 types/               Database types
 supabase/migrations/ Database schema (SQL)
 ```
